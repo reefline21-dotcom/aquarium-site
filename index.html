@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Reefline21 Fish Shop</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<ul class="bubbles-global" aria-hidden="true"></ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#home">Reefline21 Fish Shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header id="home" class="hero text-center text-light d-flex align-items-center justify-content-center">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="img/homepage/banner.webm" type="video/webm">
+  </video>
+  <div class="container" style="position: relative; z-index: 3;">
+    <h1 class="display-3 fw-bold">Reefline21 Fish Shop</h1>
+    <p class="lead">Premium ornamental fish selection with expert care</p>
+  </div>
+</header>
+
+<main class="container my-5">
+  <section id="gallery">
+    <h2 class="mb-4">Fish Gallery</h2>
+    <div id="galleryGrid" class="row g-3"></div>
+  </section>
+
+  <section id="about" class="mt-5 py-5 border-top">
+    <h2 class="mb-4">About Us</h2>
+    <div class="row align-items-center">
+      <div class="col-md-3">
+        <div id="shopImage" class="ratio ratio-1x1 rounded-3 overflow-hidden shadow-lg">
+          <img src="img/homepage/about_us.jpg" alt="Reefline21 Fish Shop" class="object-fit-cover">
+        </div>
+      </div>
+      <div class="col-md-9">
+        <p class="lead">Welcome to Reefline21 Fish Shop! I am a dedicated aquarium enthusiast with over 15 years of experience in fish breeding and cultivation. My passion is to help you discover and care for premium ornamental fish species.</p>
+        <p>Specializing in breeding rare and new ornamental fish varieties, I take pride in offering healthy, vibrant specimens that bring beauty and tranquility to your home. Each fish is carefully selected and nurtured to ensure the highest quality standards.</p>
+        <p class="text-muted">From goldfish to exotic species, our collection is curated with care and expertise. Let's build your perfect aquatic world together!</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-dark text-light py-4 border-top">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <p>&copy; 2026 Reefline21 Fish Shop. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-md-end" id="contact">
+        <div class="mb-2">
+          <a class="text-light me-3" href="https://facebook.com" target="_blank" title="Facebook"><i class="bi bi-facebook"></i></a>
+          <a class="text-light me-3" href="https://instagram.com" target="_blank" title="Instagram"><i class="bi bi-instagram"></i></a>
+          <a class="text-light me-3" href="https://wa.me/" target="_blank" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+        </div>
+        <div class="small">
+          <div>Phone: <a class="text-light" href="tel:+15551234567">+1 555-123-4567</a></div>
+          <div>Email: <a class="text-light" href="mailto:your-support@example.com">your-support@example.com</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Contact modal removed: footer contact info used instead -->
+
+<!-- Fish Detail Modal with Carousel -->
+<div class="modal fade" id="detailModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-body p-0 position-relative">
+        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal"></button>
+        <div class="container-fluid pt-3">
+          <div class="row">
+            <!-- Left: Carousel (col-5) -->
+            <div class="col-md-5">
+              <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <!-- Carousel items will be generated here -->
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+              </div>
+            </div>
+            <!-- Right: Text Content (col-7) with text wrap around -->
+            <div class="col-md-7 p-4">
+              <h5 id="detailTitle" class="fw-bold mb-2"></h5>
+              <div id="detailRating" class="mb-3">
+                <!-- Stars will be generated here -->
+              </div>
+              <p id="detailPrice" class="fw-bold text-warning fs-5 mb-3"></p>
+              <p id="detailDesc" class="text-muted lh-lg"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function(){
+  // Load and render gallery
+  $.getJSON('data/fish.json', function(items){
+    const $grid = $('#galleryGrid');
+    items.forEach((it, idx)=>{
+      const col = $('<div>').addClass('col-6 col-md-4 col-lg-3');
+      const card = $(
+        `<div class="card bg-transparent border-0 gallery-card" data-idx="${idx}">
+          <img src="${it.images[0]}" class="card-img-top img-fluid" alt="${it.name}">
+          <div class="card-footer bg-transparent border-0 p-2 text-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <div><strong>${it.name}</strong></div>
+              <div class="text-muted small">${it.price}</div>
+            </div>
+          </div>
+        </div>`
+      );
+      card.on('click', function(){
+        showFishDetail(it);
+      });
+      col.append(card);
+      $grid.append(col);
+    });
+  });
+
+  // Show fish detail with carousel
+  window.showFishDetail = function(fish){
+    $('#detailTitle').text(fish.name);
+    $('#detailDesc').text(fish.description);
+    $('#detailPrice').text(fish.price);
+    
+    // Generate star rating
+    const rating = fish.rating || 0;
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        starsHtml += '<i class="bi bi-star-fill text-warning me-1"></i>';
+      } else {
+        starsHtml += '<i class="bi bi-star text-muted me-1"></i>';
+      }
+    }
+    starsHtml += `<span class="text-muted ms-2">(${rating}/5)</span>`;
+    $('#detailRating').html(starsHtml);
+    
+    const $carousel = $('#detailCarousel .carousel-inner');
+    $carousel.empty();
+    fish.images.forEach((img, idx)=>{
+      const active = idx === 0 ? 'active' : '';
+      $carousel.append(`<div class="carousel-item ${active}"><img src="${img}" class="d-block w-100" alt=""></div>`);
+    });
+    
+    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
+    modal.show();
+  };
+
+  // Contact modal removed — footer contact details are used instead.
+  // Create decorative bubbles in the hero background
+  (function createBubbles(){
+    const $b = $('.bubbles-global');
+    if (!$b.length) return;
+    const footer = document.querySelector('footer');
+    const count = 8;
+    for (let i = 0; i < count; i++){
+      const size = Math.floor(Math.random() * 64) + 12; // 12-76px
+      const left = Math.random() * 100;
+      const duration = (Math.random() * 14 + 8).toFixed(2); // 8-22s
+      const delay = (Math.random() * -20).toFixed(2);
+      const opacity = (Math.random() * 0.6 + 0.25).toFixed(2);
+      const $li = $('<li></li>');
+
+      // compute start bottom so bubbles originate just above footer
+      let startBottom = 20; // fallback px
+      if (footer) {
+        const rect = footer.getBoundingClientRect();
+        // distance from footer top to viewport bottom
+        startBottom = Math.max(10, Math.round(window.innerHeight - rect.top + 10));
+      }
+
+      $li.css({
+        width: size + 'px',
+        height: size + 'px',
+        left: left + '%',
+        bottom: startBottom + 'px',
+        opacity: opacity,
+        animationDuration: duration + 's',
+        animationDelay: delay + 's'
+      });
+      $b.append($li);
+    }
+  })();
+});
+</script>
+</body>
+</html>

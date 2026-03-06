@@ -1,0 +1,292 @@
+/* Dark theme with animated GIF hero */
+body {
+  background-color: #000000; /* pure black aquarium backdrop */
+  color: #e9ecef;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero {
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* spotlight from top-center + soft vignette to simulate tank lighting */
+  background:
+    radial-gradient(900px 360px at 50% 8%, rgba(255,255,255,0.06), rgba(255,255,255,0.02) 10%, rgba(0,0,0,0) 35%),
+    linear-gradient(180deg, rgba(5,10,15,0.18), rgba(0,0,0,0.5));
+  pointer-events: none;
+  z-index: 1;
+  backdrop-filter: blur(3px) saturate(1.04);
+}
+
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero h1 {
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+  animation: fadeInDown 0.8s ease;
+}
+
+.hero p {
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gallery card hover effect */
+.gallery-card {
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  transition: all 0.35s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.12));
+  border: 1px solid rgba(255,255,255,0.02);
+  backdrop-filter: blur(4px);
+}
+
+.gallery-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+}
+
+.gallery-card img {
+  transition: transform 0.35s ease;
+  display: block;
+  height: 250px;
+  object-fit: cover;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+.card-footer {
+  background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45));
+  border-top: 1px solid rgba(255,255,255,0.02);
+}
+
+/* Carousel styling */
+.carousel {
+  background-color: rgba(8,8,12,0.45);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 36px rgba(0,0,0,0.6);
+}
+
+.carousel-item img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* Detail modal layout */
+.modal-body .container-fluid {
+  max-width: 100%;
+}
+
+.modal-content {
+  background: linear-gradient(180deg, rgba(8,10,12,0.7), rgba(6,6,8,0.6)) !important;
+  backdrop-filter: blur(6px) saturate(1.06);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+#detailCarousel {
+  max-height: 400px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+#detailRating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* About section */
+#about {
+  background: linear-gradient(135deg, rgba(20,22,24,0.18), rgba(10,10,12,0.10));
+  border-radius: 0.75rem;
+  padding: 3rem;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255,255,255,0.02);
+  box-shadow: inset 0 2px 18px rgba(255,255,255,0.01);
+}
+
+#shopImage {
+  display: block;
+}
+
+.ratio-1x1 {
+  aspect-ratio: 1 / 1;
+}
+
+#shopImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Footer links */
+footer a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #17a2b8;
+}
+
+footer {
+  background: rgba(6,6,8,0.6);
+  backdrop-filter: blur(4px);
+  border-top: 1px solid rgba(255,255,255,0.02);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    height: 40vh;
+  }
+  
+  .gallery-card img {
+    height: 200px;
+  }
+  
+  #about {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    height: 35vh;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Bubble background effect */
+.bubbles-global {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1; /* behind main content, above video */
+}
+.bubbles-global li {
+  position: absolute;
+  list-style: none;
+  background-image: url('../img/homepage/bubble.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 10px 40px rgba(0,0,0,0.7));
+  animation-name: rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+  opacity: 0.85;
+  mix-blend-mode: screen;
+}
+
+/* Gallery card glossy highlight */
+.gallery-card {
+  position: relative;
+}
+.gallery-card::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  right: 6px;
+  height: 36%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+  border-radius: 0.6rem;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.9;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.gallery-card:hover::after {
+  opacity: 1;
+  transform: translateY(-4px) scale(1.02);
+}
+.gallery-card:hover {
+  box-shadow: 0 12px 40px rgba(23,162,184,0.08);
+  border-color: rgba(23,162,184,0.12);
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-130vh) scale(1.2);
+    opacity: 0.08;
+  }
+}
+
+/* Small responsiveness tweak */
+@media (max-width: 576px) {
+  .bubbles li { filter: blur(0.4px); }
+}
+
+/* Ensure main content sits above bubbles for readability */
+main, .container, .row { position: relative; z-index: 3; }
+
+/* Reduce bubble count/visual impact on small screens */
+@media (max-width: 768px) {
+  .bubbles-global li { opacity: 0.7; filter: blur(0.6px) drop-shadow(0 6px 18px rgba(0,0,0,0.6)); }
+}
