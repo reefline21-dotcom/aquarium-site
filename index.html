@@ -74,8 +74,8 @@
           <a class="text-light me-3" href="https://wa.me/" target="_blank" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
         </div>
         <div class="small">
-          <div>Phone: <a class="text-light" href="tel:+18574004271">+1 8574004271</a></div>
-          <div>Email: <a class="text-light" href="mailto:reefline21@gmail.com">reefline21@gmail.com</a></div>
+          <div>Phone: <a class="text-light" href="tel:+15551234567">+1 555-123-4567</a></div>
+          <div>Email: <a class="text-light" href="mailto:your-support@example.com">your-support@example.com</a></div>
         </div>
       </div>
     </div>
@@ -131,13 +131,14 @@ $(function(){
     const $grid = $('#galleryGrid');
     items.forEach((it, idx)=>{
       const col = $('<div>').addClass('col-6 col-md-4 col-lg-3');
+      const priceText = it.price ? it.price : '';
       const card = $(
         `<div class="card bg-transparent border-0 gallery-card" data-idx="${idx}">
           <img src="${it.images[0]}" class="card-img-top img-fluid" alt="${it.name}">
           <div class="card-footer bg-transparent border-0 p-2 text-light">
             <div class="d-flex justify-content-between align-items-center">
               <div><strong>${it.name}</strong></div>
-              <div class="text-muted small">${it.price}</div>
+              <div class="text-muted small">${priceText}</div>
             </div>
           </div>
         </div>`
