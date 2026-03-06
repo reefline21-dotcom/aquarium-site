@@ -1,8 +1,8 @@
-# Reefline21 Fish Shop
+# Reefline21 Fish Factory
 
 An elegant, static ornamental fish showcase website built with **Bootstrap 5** and **jQuery**. Perfect for aquarium enthusiasts and fish breeders to showcase premium specimen collections.
 
-![Reefline21 Fish Shop](website_screenshot.png)
+![Reefline21 Fish Factory](website_screenshot.png)
 
 ## ✨ Features
 
@@ -161,7 +161,7 @@ To add a new fish species:
 ```bash
 # Initialize Git and push to GitHub
 git add .
-git commit -m "Initial commit: Reefline21 Fish Shop"
+git commit -m "Initial commit: Reefline21 Fish Factory"
 git push -u origin main
 ```
 
@@ -294,5 +294,5 @@ For questions or customization requests, please contact:
 ---
 
 **Built with ❤️ for aquarium enthusiasts**  
-*Reefline21 Fish Shop - Premium Ornamental Fish Selection*  
+*Reefline21 Fish Factory - Premium Ornamental Fish Selection*  
 Last updated: February 15, 2026
