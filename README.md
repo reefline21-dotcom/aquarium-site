@@ -1,8 +1,8 @@
-# Reefline21 Fish Shop
+# Reefline21 Fish Factory
 
 An elegant, static ornamental fish showcase website built with **Bootstrap 5** and **jQuery**. Perfect for aquarium enthusiasts and fish breeders to showcase premium specimen collections.
 
-![Reefline21 Fish Shop](website_screenshot.png)
+![Reefline21 Fish Factory](website_screenshot.png)
 
 ## ✨ Features
 
@@ -14,12 +14,18 @@ An elegant, static ornamental fish showcase website built with **Bootstrap 5** a
 - **Dark Theme**: Bootswatch Darkly theme optimized for professional presentation
 
 ### 🐠 Product Showcase
-- **Dynamic Fish Catalog**: JSON-driven database with 10 premium fish species
+- **Dynamic Fish Catalog**: JSON-driven database with 10 premium fish species (editable via admin panel)
 - **Interactive Gallery**: Click fish cards to view detailed species information
 - **Image Carousel**: Multi-image carousel per species (3-4 high-quality images each)
 - **5-Star Rating System**: Visual star ratings for each species
 - **Smooth Hover Effects**: Glass highlights and transform animations
 - **About Section**: Shop introduction with images and comprehensive description
+
+### 🛠️ Administration
+- **Local Python backend**: Simple Flask server providing CRUD APIs without a database
+- **Admin panel**: Accessible at `/admin`, lets you add/edit/delete fish entries, set name/price/rating/description, upload images, and the system writes directly to the filesystem
+- **No additional libraries**: Admin page uses the same Bootstrap/jQuery stack and shares site styling
+- **Mobile friendly**: Admin interface is responsive and works on phones/tablets
 
 ### 📱 Technical Excellence
 - **100% Static Site**: No backend required, ready for GitHub Pages
@@ -54,8 +60,11 @@ fish_project/
 
 ## 🚀 Quick Start
 
-### 1. View Locally
+### 1. View Locally (static or with backend)
 
+You can either serve the site statically or use the new lightweight Python backend for administrative features.
+
+#### Static mode
 No build process required! Simply run a Python HTTP server:
 
 ```bash
@@ -63,6 +72,38 @@ python -m http.server 8000
 ```
 
 Then open your browser: **http://localhost:8000**
+
+#### Backend mode (recommended for management)
+
+The repository now includes a simple Flask server that provides an API for creating, editing and deleting fish categories, uploading images, and persisting changes to the local filesystem.
+
+1. Install dependencies (ideally in a virtual environment):
+
+```bash# you can use the helper script below, or run manually
+bash bootstrap.sh
+```
+
+If you prefer to run commands by hand:
+
+```bash
+python -m venv .venv
+. .venv/Scripts/activate   # Git Bash on Windowspip install -r requirements.txt
+```
+
+2. Start the server:
+
+```bash
+python server.py
+```
+
+By default it listens on `http://localhost:8000` and will serve both the normal gallery and the admin interface.
+
+3. Open the public site or the admin panel in your browser:
+
+- Gallery: **http://localhost:8000/**
+- Admin panel: **http://localhost:8000/admin**
+
+The admin interface uses the same Bootstrap/jQuery styling as the main site and works on mobile devices.
 
 ### 2. Update Fish Catalog
 
@@ -120,7 +161,7 @@ To add a new fish species:
 ```bash
 # Initialize Git and push to GitHub
 git add .
-git commit -m "Initial commit: Reefline21 Fish Shop"
+git commit -m "Initial commit: Reefline21 Fish Factory"
 git push -u origin main
 ```
 
@@ -189,7 +230,7 @@ Edit footer in `index.html`:
 
 ## 📊 Current Fish Collection
 
-The site includes 10 premium ornamental fish species:
+The site includes 10 premium ornamental fish species. Entries can now be managed via the admin panel; each fish is a standalone item. The existing list is simply a flat collection:
 
 1. **Dark Knight Rams** - $28 ⭐⭐⭐⭐⭐
 2. **Blue Knight Rams** - $32 ⭐⭐⭐⭐⭐
@@ -253,5 +294,5 @@ For questions or customization requests, please contact:
 ---
 
 **Built with ❤️ for aquarium enthusiasts**  
-*Reefline21 Fish Shop - Premium Ornamental Fish Selection*  
+*Reefline21 Fish Factory - Premium Ornamental Fish Selection*  
 Last updated: February 15, 2026
