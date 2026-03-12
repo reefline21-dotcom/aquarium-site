@@ -262,6 +262,11 @@ Each species includes 2-4 high-quality images and detailed descriptions.
 - **jQuery 3.6**: DOM manipulation (CDN)
 - **Bootstrap Icons**: UI icons (CDN)
 
+### Backend (Optional)
+- **Python Flask**: Lightweight server for admin features
+- **File-based storage**: No database required
+- **Virtual environment**: Recommended for dependency isolation
+
 ### Hosting
 - **Static Site**: No backend required
 - **GitHub Pages**: Free tier available
@@ -280,6 +285,70 @@ Each species includes 2-4 high-quality images and detailed descriptions.
 - [ ] Mobile app version
 - [ ] Inventory management system
 
+## 🧠 AI Assistant & Development Guidelines
+
+### Project Conventions for AI Assistance
+
+#### File Naming Conventions
+- **Species folders**: Use kebab-case (e.g., `blue-knight-rams`, `royal-discus-fish`)
+- **Image files**: Sequential numbering (`image1.jpg`, `image2.jpg`, etc.)
+- **Homepage assets**: Descriptive names (`banner.webm`, `about_us.jpg`, `bubble.svg`)
+
+#### JSON Data Structure
+```json
+{
+  "name": "Species Name",
+  "price": "$32",
+  "rating": 5,
+  "description": "Detailed product description",
+  "images": [
+    "img/species-folder/image1.jpg",
+    "img/species-folder/image2.jpg",
+    "img/species-folder/image3.jpg",
+    "img/species-folder/image4.jpg"
+  ]
+}
+```
+
+#### CSS Architecture
+- **Single file approach**: All styles in `css/styles.css`
+- **Mobile-first**: Responsive design with media queries
+- **Glass morphism**: Use `backdrop-filter` and gradients for transparency effects
+- **Animation system**: `@keyframes` for bubble animations, `transition` for hover effects
+
+#### JavaScript Patterns
+- **jQuery DOM manipulation**: For gallery rendering and event handling
+- **Inline scripts**: All JavaScript in `index.html` for simplicity
+- **Bootstrap integration**: Use Bootstrap components via jQuery
+- **AJAX data loading**: Load `fish.json` dynamically
+
+### Development Workflow
+
+#### Adding New Fish Species
+1. Create folder: `img/new-species-name/`
+2. Add images: `image1.jpg` through `image4.jpg` (2-4 images recommended)
+3. Add entry to `data/fish.json` following the schema
+4. Gallery auto-updates on next load
+
+#### Image Guidelines
+- **Format**: JPG, PNG (16:10 or 4:3 aspect ratio recommended)
+- **Size**: 200-300 KB per image (optimize with tools like TinyPNG)
+- **Dimensions**: ~800px width recommended
+- **Naming**: Sequential numbering within species folders
+
+#### Code Organization Principles
+- **Single-page application**: All content in `index.html` with smooth scrolling
+- **Static-first design**: CDN dependencies, no build process required
+- **Component-based**: Hero, gallery, about, footer, modal components
+- **Responsive layout**: Bootstrap grid system with mobile-first approach
+
+### Maintenance Guidelines
+- Keep image sizes optimized (200-300 KB each)
+- Maintain consistent JSON schema for data integrity
+- Test responsive behavior on multiple screen sizes
+- Verify all image paths are correct in JSON data
+- Update this README when making significant changes
+
 ## 📝 License
 
 This project is open-source and available for personal or commercial use. Feel free to customize, extend, and deploy!
@@ -295,4 +364,4 @@ For questions or customization requests, please contact:
 
 **Built with ❤️ for aquarium enthusiasts**  
 *Reefline21 Fish Factory - Premium Ornamental Fish Selection*  
-Last updated: February 15, 2026
+Last updated: March 9, 2026
