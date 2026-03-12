@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reefline21 Fish Factory - Admin</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* simple tweaks for admin interface */
+    .admin-header { margin-top: 1rem; margin-bottom: 1rem; }
+    .image-thumb { position: relative; display: inline-block; margin: 4px; }
+    .image-thumb img { max-width: 100px; max-height: 100px; border: 1px solid #666; }
+    .image-thumb img.primary { border-color: #17a2b8; box-shadow: 0 0 4px #17a2b8; }
+    .image-thumb .btn-close { position: absolute; top: -6px; right: -6px; }
+    .image-thumb label { display: block; text-align: center; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+<ul class="bubbles-global" aria-hidden="true"></ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">Reefline21 Fish Factory</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-5">
+  <h2 class="admin-header text-light">管理面板</h2>
+  <button id="addCategoryBtn" class="btn btn-success mb-3">添加新品</button>
+  <div id="categories"></div>
+</main>
+
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="categoryModalTitle">添加新品</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="categoryForm">
+          <input type="hidden" id="catIndex" value="-1">
+          <div class="mb-3">
+            <label for="catName" class="form-label">名称</label>
+            <input type="text" class="form-control" id="catName" required maxlength="100">
+          </div>
+          <div class="mb-3">
+            <label for="catPrice" class="form-label">价格</label>
+            <input type="text" class="form-control" id="catPrice" maxlength="20">
+          </div>
+          <div class="mb-3">
+            <label for="catRating" class="form-label">评级 (1-5)</label>
+            <input type="number" class="form-control" id="catRating" min="1" max="5">
+          </div>
+          <div class="mb-3">
+            <label for="catDesc" class="form-label">描述 (200 字以内)</label>
+            <textarea class="form-control" id="catDesc" rows="3" maxlength="200"></textarea>
+          </div>
+                  <div class="mb-3">
+            <label class="form-label">当前图片</label>
+            <div id="catExistingImages" class="d-flex flex-wrap"></div>
+          </div>
+          <div class="mb-3">
+            <label for="catImages" class="form-label">上传新图片 (可多选)</label>
+            <input type="file" class="form-control" id="catImages" accept="image/*" multiple>
+          </div>
+          <div class="form-text">可在表单提交后选择主显示图。</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" id="saveCatBtn" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Delete Category Confirm Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light border-secondary">
+      <div class="modal-header">
+        <h5 class="modal-title">删除确认</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-1">确定删除此大类及其所有图片吗？</p>
+        <p class="mb-0 text-warning small">此操作不可撤销：<span id="deleteCatName" class="fw-bold"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" id="confirmDeleteCategoryBtn" class="btn btn-danger">删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function(){
+  let fishData = [];
+  let pendingDeleteCategoryIndex = null;
+
+  function loadData(){
+    $.getJSON('/api/fish', function(data){
+      fishData = data;
+      renderCategories();
+    });
+  }
+
+  function saveData(callback){
+    $.ajax({
+      url: '/api/fish',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(fishData),
+      success: function(){
+        if(callback) callback();
+        loadData();
+      },
+      error: function(){ alert('保存失败'); }
+    });
+  }
+
+  function renderCategories(){
+    const $container = $('#categories');
+    $container.empty();
+    fishData.forEach((cat,cidx)=>{
+      const $card = $('<div class="card mb-3 bg-transparent border-secondary"></div>');
+      const $body = $('<div class="card-body"></div>');
+      $body.append(`<h5 class="card-title">${cat.name || ''}</h5>`);
+      $body.append(`<p class="card-text">${cat.description || ''}</p>`);
+      const $btnEdit = $('<button class="btn btn-sm btn-primary me-2">编辑</button>').on('click',()=>openCategoryModal(cidx));
+      const $btnDel = $('<button class="btn btn-sm btn-danger me-2">删除</button>').on('click',()=>openDeleteCategoryModal(cidx));
+      $body.append($btnEdit,$btnDel);
+      $card.append($body);
+      $container.append($card);
+    });
+  }
+
+  function openCategoryModal(index){
+    const cat = index >= 0 ? fishData[index] : {name:'',description:'',images:[]};
+    $('#catIndex').val(index);
+    $('#catName').val(cat.name);
+    $('#catDesc').val(cat.description);
+    renderImageThumbnails(cat.images || [], '#catExistingImages');
+    $('#catImages').val('');
+    $('#catPrice').val(cat.price||'');
+    $('#catRating').val(cat.rating||'');
+    $('#categoryModalTitle').text(index>=0?'编辑描述':'添加新品');
+    $('#categoryModal').modal('show');
+  }
+
+  function renderImageThumbnails(images, container){
+    const $ctr = $(container).empty();
+    images.forEach((src, idx)=>{
+      const $wrap = $('<div class="image-thumb"></div>');
+      // clicking on thumbnail moves it to front (main image)
+      const $img = $(`<img src="${src}" />`).css('cursor','pointer')
+        .toggleClass('primary', idx === 0)
+        .on('click',()=>{
+          if(idx !== 0){
+            images.splice(idx,1);
+            images.unshift(src);
+            renderImageThumbnails(images, container);
+          }
+        });
+      const $btn = $('<button type="button" class="btn-close btn-close-white btn-sm" title="删除"></button>').on('click',()=>{
+        if(confirm('删除这张图片？')){
+          // ask server to delete file (send JSON)
+          $.ajax({
+            url: '/api/delete_file',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({path: src}),
+            success: function(){
+              images.splice(idx,1);
+              renderImageThumbnails(images, container);
+            },
+            error: function(){ alert('图片删除失败'); }
+          });
+        }
+      });
+      $wrap.append($img,$btn);
+      $ctr.append($wrap);
+    });
+  }
+
+
+  function openDeleteCategoryModal(idx){
+    pendingDeleteCategoryIndex = idx;
+    const cat = fishData[idx] || {};
+    $('#deleteCatName').text(cat.name || '');
+    const modalEl = document.getElementById('deleteCategoryModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
+
+  function deleteCategory(idx){
+    const cat = fishData[idx];
+    // delete folder if exists
+    const folder = cat.name ? `img/${cat.name}` : null;
+    if(folder){
+      $.post('/api/delete_folder', JSON.stringify({path:folder}));
+    }
+    fishData.splice(idx,1);
+    saveData();
+  }
+
+
+  // handle save cat click
+  $('#addCategoryBtn').on('click', function(){ openCategoryModal(-1); });
+  $('#confirmDeleteCategoryBtn').on('click', function(){
+    if (pendingDeleteCategoryIndex === null || pendingDeleteCategoryIndex < 0) return;
+    deleteCategory(pendingDeleteCategoryIndex);
+    pendingDeleteCategoryIndex = null;
+    const modalEl = document.getElementById('deleteCategoryModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+  });
+
+  $('#saveCatBtn').on('click', function(){
+    const idx = parseInt($('#catIndex').val(),10);
+    const name = $('#catName').val().trim();
+    const price = $('#catPrice').val().trim();
+    const rating = parseInt($('#catRating').val(),10)||0;
+    const desc = $('#catDesc').val().trim();
+    if(!name){alert('名称不能为空');return;}
+    const catObj = idx>=0?fishData[idx]:{};
+    catObj.name = name;
+    catObj.price = price;
+    catObj.rating = rating;
+    catObj.description = desc;
+    // upload new images if any
+    const files = $('#catImages')[0].files;
+    if(files.length){
+      const form = new FormData();
+      form.append('category', name);
+      for(let f of files) form.append('images', f);
+      $.ajax({
+        url:'/api/upload',
+        method:'POST',
+        data: form,
+        processData:false,
+        contentType:false,
+        success:function(r){
+          catObj.images = (catObj.images||[]).concat(r.paths);
+          finalizeCatSave(idx, catObj);
+        }
+      });
+    } else {
+      finalizeCatSave(idx, catObj);
+    }
+  });
+
+  function finalizeCatSave(idx, catObj){
+    // ensure images order/maybe ask user which is main later
+    if(idx>=0){
+      fishData[idx] = catObj;
+    } else {
+      fishData.push(catObj);
+    }
+    saveData(function(){ $('#categoryModal').modal('hide'); });
+  }
+
+
+  // initialize
+  loadData();
+
+  // subcategory list rendering inside category modal
+
+  // bubble background copy from index page for admin
+  (function createBubbles(){
+    const $b = $('.bubbles-global');
+    if (!$b.length) return;
+    const footer = document.querySelector('footer');
+    const count = 8;
+    for (let i = 0; i < count; i++){
+      const size = Math.floor(Math.random() * 64) + 12;
+      const left = Math.random() * 100;
+      const duration = (Math.random() * 14 + 8).toFixed(2);
+      const delay = (Math.random() * -20).toFixed(2);
+      const opacity = (Math.random() * 0.6 + 0.25).toFixed(2);
+      const $li = $('<li></li>');
+      let startBottom = 20;
+      if (footer) {
+        const rect = footer.getBoundingClientRect();
+        startBottom = Math.max(10, Math.round(window.innerHeight - rect.top + 10));
+      }
+      $li.css({
+        width: size + 'px',
+        height: size + 'px',
+        left: left + '%',
+        bottom: startBottom + 'px',
+        opacity: opacity,
+        animationDuration: duration + 's',
+        animationDelay: delay + 's'
+      });
+      $b.append($li);
+    }
+  })();
+});
+</script>
+</body>
+</html>
