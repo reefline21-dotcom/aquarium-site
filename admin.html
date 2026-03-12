@@ -86,12 +86,32 @@
     </div>
   </div>
 
+<!-- Delete Category Confirm Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light border-secondary">
+      <div class="modal-header">
+        <h5 class="modal-title">删除确认</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-1">确定删除此大类及其所有图片吗？</p>
+        <p class="mb-0 text-warning small">此操作不可撤销：<span id="deleteCatName" class="fw-bold"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" id="confirmDeleteCategoryBtn" class="btn btn-danger">删除</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 $(function(){
   let fishData = [];
+  let pendingDeleteCategoryIndex = null;
 
   function loadData(){
     $.getJSON('/api/fish', function(data){
@@ -123,7 +143,7 @@ $(function(){
       $body.append(`<h5 class="card-title">${cat.name || ''}</h5>`);
       $body.append(`<p class="card-text">${cat.description || ''}</p>`);
       const $btnEdit = $('<button class="btn btn-sm btn-primary me-2">编辑</button>').on('click',()=>openCategoryModal(cidx));
-      const $btnDel = $('<button class="btn btn-sm btn-danger me-2">删除</button>').on('click',()=>deleteCategory(cidx));
+      const $btnDel = $('<button class="btn btn-sm btn-danger me-2">删除</button>').on('click',()=>openDeleteCategoryModal(cidx));
       $body.append($btnEdit,$btnDel);
       $card.append($body);
       $container.append($card);
@@ -179,8 +199,16 @@ $(function(){
   }
 
 
+  function openDeleteCategoryModal(idx){
+    pendingDeleteCategoryIndex = idx;
+    const cat = fishData[idx] || {};
+    $('#deleteCatName').text(cat.name || '');
+    const modalEl = document.getElementById('deleteCategoryModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
+
   function deleteCategory(idx){
-    if(!confirm('确定删除此大类及其图片？')) return;
     const cat = fishData[idx];
     // delete folder if exists
     const folder = cat.name ? `img/${cat.name}` : null;
@@ -194,6 +222,14 @@ $(function(){
 
   // handle save cat click
   $('#addCategoryBtn').on('click', function(){ openCategoryModal(-1); });
+  $('#confirmDeleteCategoryBtn').on('click', function(){
+    if (pendingDeleteCategoryIndex === null || pendingDeleteCategoryIndex < 0) return;
+    deleteCategory(pendingDeleteCategoryIndex);
+    pendingDeleteCategoryIndex = null;
+    const modalEl = document.getElementById('deleteCategoryModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+  });
 
   $('#saveCatBtn').on('click', function(){
     const idx = parseInt($('#catIndex').val(),10);
