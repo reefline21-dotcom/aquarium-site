@@ -1,0 +1,60 @@
+name: Hybrid Dual-PC AI-Suite
+version: 1.1.0
+schema: v1
+
+
+models:
+  # --- 1. 极速补全 (B 电脑本地跑) ---
+  - name: Local-Fast-Tab
+    provider: ollama
+    model: qwen2.5-coder:1.5b-instruct-q4_K_M
+    apiBase: http://localhost:11434
+    roles:
+      - autocomplete
+      - chat
+    options:
+      temperature: 0
+      num_predict: 64
+
+
+  # --- 2. 逻辑大脑 (硅基流动：免费 R1-7B) ---
+  # 适合处理 300 行股票代码的重构和逻辑分析
+  - name: R1-Distill-7B-Free
+    provider: siliconflow
+    model: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+    apiBase: https://api.siliconflow.cn
+    apiKey: sk-nglitflgfosoyowpdxlgwlsuuhhaobipxnyrvdemgjfnezqq
+    roles:
+      - chat
+      - edit
+    options:
+      temperature: 0.6
+      num_ctx: 16384
+
+
+  # --- 3. 巅峰算力 (硅基流动：付费 V3 Pro) ---
+  # 当 7B 解决不了 Bug 时，切换到这个 16 元代金券支持的满血模型
+  - name: DeepSeek-V3-Pro
+    provider: siliconflow
+    model: Pro/deepseek-ai/DeepSeek-V3.2
+    apiBase: https://api.siliconflow.cn
+    apiKey: sk-nglitflgfosoyowpdxlgwlsuuhhaobipxnyrvdemgjfnezqq
+    roles:
+      - chat
+      - edit
+      - apply
+    options:
+      temperature: 0.2
+      num_predict: 1024  # 增加输出长度，方便一次性重写大段代码
+
+
+  # --- 4. 本地索引 (B 电脑本地跑) ---
+  - name: Embed-Model
+    provider: ollama
+    model: nomic-embed-text
+    apiBase: http://localhost:11434
+    roles:
+      - embed
+
+
+
