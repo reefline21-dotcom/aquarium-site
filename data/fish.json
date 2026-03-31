@@ -106,5 +106,16 @@
     "name": "Albino High Fin Firecracker",
     "price": "$15",
     "rating": 3
+  },
+  {
+    "name": "Dark Knight Ram Breeding Pair",
+    "price": "$75",
+    "rating": 5,
+    "description": "",
+    "images": [
+      "img/Dark_Knight_Ram_Breeding_Pair/2207596e459a233edbb67f0717447b5.jpg",
+      "img/Dark_Knight_Ram_Breeding_Pair/a6a177707c391047b7dc49a171c2e11.png.jpg",
+      "img/Dark_Knight_Ram_Breeding_Pair/d45fd8d0a0b150641229f54cf8ef58a.jpg"
+    ]
   }
 ]
