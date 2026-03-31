@@ -16,6 +16,34 @@
     .image-thumb img.primary { border-color: #17a2b8; box-shadow: 0 0 4px #17a2b8; }
     .image-thumb .btn-close { position: absolute; top: -6px; right: -6px; }
     .image-thumb label { display: block; text-align: center; font-size: 0.8rem; }
+    
+    /* Toast notification styles */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      padding: 12px 20px;
+      border-radius: 6px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 1.5s forwards;
+    }
+    .toast-success { background-color: #198754; }
+    .toast-error { background-color: #dc3545; }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
   </style>
 </head>
 <body>
@@ -40,6 +68,9 @@
   <button id="addCategoryBtn" class="btn btn-success mb-3">添加新品</button>
   <div id="categories"></div>
 </main>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
 
 <!-- Category Modal -->
 <div class="modal fade" id="categoryModal" tabindex="-1">
@@ -85,6 +116,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <!-- Delete Category Confirm Modal -->
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
@@ -208,6 +240,17 @@ $(function(){
     modal.show();
   }
 
+  function showToast(message, type) {
+    const container = $('#toastContainer');
+    const toast = $('<div class="toast"></div>')
+      .addClass(type === 'success' ? 'toast-success' : 'toast-error')
+      .text(message);
+    container.append(toast);
+    setTimeout(() => {
+      toast.remove();
+    }, 2000);
+  }
+
   function deleteCategory(idx){
     const cat = fishData[idx];
     // delete folder if exists
@@ -216,7 +259,9 @@ $(function(){
       $.post('/api/delete_folder', JSON.stringify({path:folder}));
     }
     fishData.splice(idx,1);
-    saveData();
+    saveData(function(){
+      showToast('Item deleted successfully', 'success');
+    });
   }
 
 
@@ -229,6 +274,13 @@ $(function(){
     const modalEl = document.getElementById('deleteCategoryModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
+  });
+
+  $('#deleteCategoryModal').on('hidden.bs.modal', function () {
+    if (pendingDeleteCategoryIndex !== null) {
+      showToast('Delete canceled', 'error');
+      pendingDeleteCategoryIndex = null;
+    }
   });
 
   $('#saveCatBtn').on('click', function(){
