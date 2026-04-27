@@ -39,7 +39,6 @@
     "description": "Golden Rams are beautiful dwarf cichlids with warm, golden-yellow coloration that makes them stand out in any aquarium. These peaceful, colorful fish are known for their friendly personalities.",
     "images": [
       "img/golden-rams/image1.jpg",
-      "img/golden-rams/image2.jpg",
       "img/golden-rams/image3.jpg",
       "img/golden-rams/image4.jpg"
     ],
@@ -62,9 +61,7 @@
     "description": "Mosaic Guppies are true works of art with intricate, mosaic-like patterns covering their beautiful bodies and flowing tails! Each fish displays unique and colorful designs.",
     "images": [
       "img/mosaic-guppies/image1.jpg",
-      "img/mosaic-guppies/image2.jpg",
-      "img/mosaic-guppies/image3.jpg",
-      "img/mosaic-guppies/image4.jpg"
+      "img/mosaic-guppies/image3.jpg"
     ],
     "name": "Mosaic Guppies",
     "price": "$8.9",
