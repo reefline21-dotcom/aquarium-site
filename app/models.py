@@ -97,6 +97,43 @@ def upload_images(
     return paths
 
 
+def upload_videos(
+    category: str, subcategory: str | None, files: List[FileStorage]
+) -> List[str]:
+    cfg = get_config()
+
+    category = (category or "").strip()
+    subcategory = (subcategory or "").strip()
+    if not category:
+        raise ValueError("category required")
+
+    # Build safe target under img_root_path
+    target_parts = [secure_filename(category)]
+    if subcategory:
+        target_parts.append(secure_filename(subcategory))
+
+    target = _safe_join(cfg.img_root_path, *target_parts)
+    os.makedirs(target, exist_ok=True)
+
+    paths: List[str] = []
+    for storage in files:
+        filename = secure_filename(storage.filename or "")
+        if not filename:
+            continue
+        _, ext = os.path.splitext(filename)
+        if ext.lower() not in cfg.allowed_video_extensions:
+            raise ValueError("unsupported file type")
+        if storage.content_length is not None and storage.content_length > cfg.max_upload_bytes:
+            raise ValueError("file too large")
+
+        dest = os.path.join(target, filename)
+        storage.save(dest)
+        rel = os.path.relpath(dest, cfg.base_dir).replace("\\", "/")
+        paths.append(rel)
+
+    return paths
+
+
 def delete_file(path: str) -> Dict[str, str]:
     if not path:
         raise ValueError("path required")

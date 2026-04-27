@@ -172,9 +172,16 @@ $(function(){
     
     const $carousel = $('#detailCarousel .carousel-inner');
     $carousel.empty();
-    fish.images.forEach((img, idx)=>{
+    
+    // Show videos first, then images
+    const media = (fish.videos || []).concat(fish.images || []);
+    media.forEach((src, idx)=>{
       const active = idx === 0 ? 'active' : '';
-      $carousel.append(`<div class="carousel-item ${active}"><img src="${img}" class="d-block w-100" alt=""></div>`);
+      if (src.endsWith('.mp4') || src.endsWith('.webm')) {
+        $carousel.append(`<div class="carousel-item ${active}"><video src="${src}" loop muted playsinline class="d-block w-100" onclick="this.paused ? this.play() : this.pause()"></video></div>`);
+      } else {
+        $carousel.append(`<div class="carousel-item ${active}"><img src="${src}" class="d-block w-100" alt=""></div>`);
+      }
     });
     
     var modal = new bootstrap.Modal(document.getElementById('detailModal'));

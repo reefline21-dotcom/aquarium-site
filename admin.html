@@ -11,11 +11,12 @@
   <style>
     /* simple tweaks for admin interface */
     .admin-header { margin-top: 1rem; margin-bottom: 1rem; }
-    .image-thumb { position: relative; display: inline-block; margin: 4px; }
-    .image-thumb img { max-width: 100px; max-height: 100px; border: 1px solid #666; }
-    .image-thumb img.primary { border-color: #17a2b8; box-shadow: 0 0 4px #17a2b8; }
-    .image-thumb .btn-close { position: absolute; top: -6px; right: -6px; }
-    .image-thumb label { display: block; text-align: center; font-size: 0.8rem; }
+    .image-thumb, .video-thumb { position: relative; display: inline-block; margin: 4px; }
+    .image-thumb img, .video-thumb video { max-width: 100px; max-height: 100px; border: 1px solid #666; }
+    .image-thumb img.primary, .video-thumb video.primary { border-color: #17a2b8; box-shadow: 0 0 4px #17a2b8; }
+    .image-thumb .btn-close, .video-thumb .btn-close { position: absolute; top: -6px; right: -6px; }
+    .image-thumb label, .video-thumb label { display: block; text-align: center; font-size: 0.8rem; }
+    .video-thumb video { object-fit: cover; }
     
     /* Toast notification styles */
     .toast-container {
@@ -107,6 +108,14 @@
             <label for="catImages" class="form-label">上传新图片 (可多选)</label>
             <input type="file" class="form-control" id="catImages" accept="image/*" multiple>
           </div>
+          <div class="mb-3">
+            <label class="form-label">当前视频</label>
+            <div id="catExistingVideos" class="d-flex flex-wrap"></div>
+          </div>
+          <div class="mb-3">
+            <label for="catVideos" class="form-label">上传新视频 (可多选)</label>
+            <input type="file" class="form-control" id="catVideos" accept="video/*" multiple>
+          </div>
           <div class="form-text">可在表单提交后选择主显示图。</div>
         </form>
       </div>
@@ -183,12 +192,14 @@ $(function(){
   }
 
   function openCategoryModal(index){
-    const cat = index >= 0 ? fishData[index] : {name:'',description:'',images:[]};
+    const cat = index >= 0 ? fishData[index] : {name:'',description:'',images:[],videos:[]};
     $('#catIndex').val(index);
     $('#catName').val(cat.name);
     $('#catDesc').val(cat.description);
     renderImageThumbnails(cat.images || [], '#catExistingImages');
+    renderVideoThumbnails(cat.videos || [], '#catExistingVideos');
     $('#catImages').val('');
+    $('#catVideos').val('');
     $('#catPrice').val(cat.price||'');
     $('#catRating').val(cat.rating||'');
     $('#categoryModalTitle').text(index>=0?'编辑描述':'添加新品');
@@ -226,6 +237,44 @@ $(function(){
         }
       });
       $wrap.append($img,$btn);
+      $ctr.append($wrap);
+    });
+  }
+
+  function renderVideoThumbnails(videos, container){
+    const $ctr = $(container).empty();
+    videos.forEach((src, idx)=>{
+      const $wrap = $('<div class="video-thumb"></div>');
+      const $video = $(`<video src="${src}" loop muted playsinline />`).css('cursor','pointer')
+        .toggleClass('primary', idx === 0)
+        .on('click', function(e){
+          // Don't reorder if clicking on the delete button
+          if($(e.target).is('button')) return;
+          if(idx !== 0){
+            videos.splice(idx,1);
+            videos.unshift(src);
+            renderVideoThumbnails(videos, container);
+          }
+          // Toggle play/pause
+          this.paused ? this.play() : this.pause();
+        });
+      const $btn = $('<button type="button" class="btn-close btn-close-white btn-sm" title="删除"></button>').on('click', function(e){
+        e.stopPropagation();
+        if(confirm('删除这个视频？')){
+          $.ajax({
+            url: '/api/delete_file',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({path: src}),
+            success: function(){
+              videos.splice(idx,1);
+              renderVideoThumbnails(videos, container);
+            },
+            error: function(){ alert('视频删除失败'); }
+          });
+        }
+      });
+      $wrap.append($video,$btn);
       $ctr.append($wrap);
     });
   }
@@ -296,21 +345,43 @@ $(function(){
     catObj.rating = rating;
     catObj.description = desc;
     // upload new images if any
-    const files = $('#catImages')[0].files;
-    if(files.length){
+    const imageFiles = $('#catImages')[0].files;
+    const videoFiles = $('#catVideos')[0].files;
+    const uploads = [];
+    
+    if(imageFiles.length){
       const form = new FormData();
       form.append('category', name);
-      for(let f of files) form.append('images', f);
-      $.ajax({
+      for(let f of imageFiles) form.append('images', f);
+      uploads.push($.ajax({
         url:'/api/upload',
         method:'POST',
         data: form,
         processData:false,
-        contentType:false,
-        success:function(r){
-          catObj.images = (catObj.images||[]).concat(r.paths);
-          finalizeCatSave(idx, catObj);
-        }
+        contentType:false
+      }));
+    }
+    
+    if(videoFiles.length){
+      const form = new FormData();
+      form.append('category', name);
+      for(let f of videoFiles) form.append('videos', f);
+      uploads.push($.ajax({
+        url:'/api/upload',
+        method:'POST',
+        data: form,
+        processData:false,
+        contentType:false
+      }));
+    }
+    
+    if(uploads.length){
+      $.when.apply($, uploads).done(function(){
+        const imageResult = arguments[0];
+        const videoResult = arguments[1] || {video_paths:[]};
+        catObj.images = (catObj.images||[]).concat(imageResult.paths || []);
+        catObj.videos = (catObj.videos||[]).concat(videoResult.video_paths || []);
+        finalizeCatSave(idx, catObj);
       });
     } else {
       finalizeCatSave(idx, catObj);

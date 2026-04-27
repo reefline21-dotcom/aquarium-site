@@ -27,12 +27,29 @@ def save_fish():
 def upload():
     category = request.form.get("category", "")
     subcategory = request.form.get("subcategory", "")
-    paths = _service.upload_images(
-        category=category,
-        subcategory=subcategory,
-        files=request.files.getlist("images"),
-    )
-    return jsonify({"paths": paths})
+    
+    image_paths = []
+    video_paths = []
+    
+    # Handle images
+    image_files = request.files.getlist("images")
+    if image_files:
+        image_paths = _service.upload_images(
+            category=category,
+            subcategory=subcategory,
+            files=image_files,
+        )
+    
+    # Handle videos
+    video_files = request.files.getlist("videos")
+    if video_files:
+        video_paths = _service.upload_videos(
+            category=category,
+            subcategory=subcategory,
+            files=video_files,
+        )
+    
+    return jsonify({"paths": image_paths, "video_paths": video_paths})
 
 
 @api_bp.post("/delete_file")

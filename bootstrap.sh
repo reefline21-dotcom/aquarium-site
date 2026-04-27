@@ -17,7 +17,7 @@ echo "[+] venv activated (python $(python --version))"
 
 if [ -f requirements.txt ]; then
   echo "[+] installing/updating dependencies from requirements.txt"
-  pip install --upgrade pip
+ # pip install --upgrade pip
   pip install -r requirements.txt
 fi
 

@@ -81,6 +81,19 @@ class FishService:
             files=cast(List[FileStorage], files_list),
         )
 
+    def upload_videos(
+        self,
+        category: str,
+        subcategory: str | None,
+        files: Iterable[FileStorage],
+    ) -> List[str]:
+        files_list = list(files)
+        return models.upload_videos(
+            category=category,
+            subcategory=subcategory,
+            files=cast(List[FileStorage], files_list),
+        )
+
     def delete_file(self, path: str | None) -> Dict[str, str]:
         return models.delete_file(path or "")
 

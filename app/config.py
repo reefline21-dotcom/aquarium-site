@@ -39,6 +39,9 @@ class Config:
     allowed_image_extensions: Set[str] = field(
         default_factory=lambda: {".jpg", ".jpeg", ".png", ".webp"}
     )
+    allowed_video_extensions: Set[str] = field(
+        default_factory=lambda: {".mp4", ".webm", ".mov"}
+    )
 
     # Backup behavior
     backup_versions: int = 5
