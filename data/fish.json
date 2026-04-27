@@ -149,7 +149,7 @@
     "price": "100",
     "rating": 5,
     "description": "$100 in a pair",
-    "images": [],
+    "images": ["img/Blue_Knight_Storm_Rams/pic_01.jfif"],
     "videos": ["img/Blue_Knight_Storm_Rams/video_04.mp4","img/Blue_Knight_Storm_Rams/video_05.mp4"]
   }
 ]
