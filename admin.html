@@ -347,45 +347,47 @@ $(function(){
     // upload new images if any
     const imageFiles = $('#catImages')[0].files;
     const videoFiles = $('#catVideos')[0].files;
-    const uploads = [];
+    
+    const uploadPromises = [];
     
     if(imageFiles.length){
       const form = new FormData();
       form.append('category', name);
       for(let f of imageFiles) form.append('images', f);
-      uploads.push($.ajax({
+      uploadPromises.push($.ajax({
         url:'/api/upload',
         method:'POST',
         data: form,
         processData:false,
         contentType:false
-      }));
+      }).then(function(r){ return {type: 'images', paths: r.paths || []}; }));
+    } else {
+      uploadPromises.push(Promise.resolve({type: 'images', paths: []}));
     }
     
     if(videoFiles.length){
       const form = new FormData();
       form.append('category', name);
       for(let f of videoFiles) form.append('videos', f);
-      uploads.push($.ajax({
+      uploadPromises.push($.ajax({
         url:'/api/upload',
         method:'POST',
         data: form,
         processData:false,
         contentType:false
-      }));
+      }).then(function(r){ return {type: 'videos', paths: r.video_paths || []}; }));
+    } else {
+      uploadPromises.push(Promise.resolve({type: 'videos', paths: []}));
     }
     
-    if(uploads.length){
-      $.when.apply($, uploads).done(function(){
-        const imageResult = arguments[0];
-        const videoResult = arguments[1] || {video_paths:[]};
-        catObj.images = (catObj.images||[]).concat(imageResult.paths || []);
-        catObj.videos = (catObj.videos||[]).concat(videoResult.video_paths || []);
-        finalizeCatSave(idx, catObj);
+    Promise.all(uploadPromises).then(function(results){
+      results.forEach(function(r){
+        if(r.type === 'images') catObj.images = (catObj.images||[]).concat(r.paths);
+        if(r.type === 'videos') catObj.videos = (catObj.videos||[]).concat(r.paths);
       });
-    } else {
+      console.log('CatObj after upload:', catObj);
       finalizeCatSave(idx, catObj);
-    }
+    });
   });
 
   function finalizeCatSave(idx, catObj){

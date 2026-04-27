@@ -122,15 +122,17 @@ def upload_videos(
             continue
         _, ext = os.path.splitext(filename)
         if ext.lower() not in cfg.allowed_video_extensions:
-            raise ValueError("unsupported file type")
+            raise ValueError(f"unsupported file type: {filename}")
         if storage.content_length is not None and storage.content_length > cfg.max_upload_bytes:
-            raise ValueError("file too large")
+            raise ValueError(f"file too large: {filename}")
 
         dest = os.path.join(target, filename)
         storage.save(dest)
         rel = os.path.relpath(dest, cfg.base_dir).replace("\\", "/")
         paths.append(rel)
+        print(f"DEBUG: Uploaded video: {filename} -> {rel}")
 
+    print(f"DEBUG: Total videos uploaded: {len(paths)}, paths: {paths}")
     return paths
 
 

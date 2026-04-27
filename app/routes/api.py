@@ -28,12 +28,16 @@ def upload():
     category = request.form.get("category", "")
     subcategory = request.form.get("subcategory", "")
     
+    print(f"DEBUG: Upload request - category: {category}, subcategory: {subcategory}")
+    print(f"DEBUG: Request files: {list(request.files.keys())}")
+    
     image_paths = []
     video_paths = []
     
     # Handle images
     image_files = request.files.getlist("images")
     if image_files:
+        print(f"DEBUG: Uploading {len(image_files)} images")
         image_paths = _service.upload_images(
             category=category,
             subcategory=subcategory,
@@ -43,12 +47,14 @@ def upload():
     # Handle videos
     video_files = request.files.getlist("videos")
     if video_files:
+        print(f"DEBUG: Uploading {len(video_files)} videos")
         video_paths = _service.upload_videos(
             category=category,
             subcategory=subcategory,
             files=video_files,
         )
     
+    print(f"DEBUG: Returning - images: {image_paths}, videos: {video_paths}")
     return jsonify({"paths": image_paths, "video_paths": video_paths})
 
 
